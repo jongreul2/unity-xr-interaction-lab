@@ -1,0 +1,15 @@
+{
+  "name": "com.jongreul.xr-interaction",
+  "version": "0.1.0",
+  "displayName": "XR Interaction Lab",
+  "description": "툴킷 없이 직접 구현한 VR 상호작용 모음: 손 입력·그랩·소켓 장착, 손 속도 타격 판정, 방패 막기, 카트리지 슬롯, 짚라인, 그립 정렬, 던지기.",
+  "unity": "6000.3",
+  "author": {
+    "name": "Jongreul Kang",
+    "url": "https://github.com/jongreul2"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "com.unity.ugui": "2.0.0"
+  }
+}
