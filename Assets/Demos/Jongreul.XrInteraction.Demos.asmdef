@@ -1,0 +1,20 @@
+{
+    "name": "Jongreul.XrInteraction.Demos",
+    "rootNamespace": "Jongreul.XrInteraction.Demos",
+    "references": [
+        "Jongreul.XrInteraction.Core",
+        "Jongreul.XrInteraction",
+        "Jongreul.XrInteraction.Stations",
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
