@@ -20,12 +20,15 @@ namespace Jongreul.XrInteraction.Demos.Tests
         /// 여러 카메라를 같은 순간에 찍어 각자 폴더에 저장한다(1인칭 + 관찰자 겹쳐 보기용).
         /// lockTime이면 게임 시간을 프레임당 1/fps로 고정한다 — 저장이 실시간을 못 따라가도 GIF 속도가 실제 속도와 같다
         /// (이때 촬영 스크립트는 실시간이 아니라 게임 시간으로 기다려야 한다).
+        /// stepsPerFrame: lockTime일 때 저장 한 장 사이에 돌리는 게임 프레임 수 — 던지기처럼 짧은 동작은 60 Hz로 돌리고 15 fps로 저장한다.
         /// </summary>
-        public static IEnumerator Record(Camera[] cameras, string[] names, float seconds, float fps, bool lockTime = false)
+        public static IEnumerator Record(Camera[] cameras, string[] names, float seconds, float fps, bool lockTime = false,
+            int stepsPerFrame = 1)
         {
+            stepsPerFrame = Mathf.Max(1, stepsPerFrame);
             int previousCaptureFramerate = Time.captureFramerate;
             if (lockTime)
-                Time.captureFramerate = Mathf.RoundToInt(fps);
+                Time.captureFramerate = Mathf.RoundToInt(fps) * stepsPerFrame;
 
             string root = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "artifacts", "frames");
             var directories = new string[cameras.Length];
@@ -51,8 +54,8 @@ namespace Jongreul.XrInteraction.Demos.Tests
             {
                 if (lockTime)
                 {
-                    if (frame > 0)
-                        yield return null; // 한 프레임 = 게임 시간 1/fps
+                    for (int step = 0; frame > 0 && step < stepsPerFrame; step++)
+                        yield return null; // 저장 한 장 = 게임 시간 1/fps
                 }
                 else
                 {

@@ -20,6 +20,7 @@ namespace Jongreul.XrInteraction.Demos
         public const float CartridgeSpotX = 9.0f;
         public const float ZiplineSpotX = 12.0f;
         public const float GripSpotX = 15.0f;
+        public const float ThrowSpotX = 18.0f;
 
         /// <summary>순간이동 지점. 짚라인은 출발대 위에 선다.</summary>
         static readonly Vector3[] Spots =
@@ -30,9 +31,10 @@ namespace Jongreul.XrInteraction.Demos
             new Vector3(CartridgeSpotX, 0f, 0f),
             new Vector3(ZiplineSpotX, ZiplineStation.PlatformHeight, 0f),
             new Vector3(GripSpotX, 0f, 0f),
+            new Vector3(ThrowSpotX, 0f, 0f),
         };
 
-        static readonly Key[] SpotKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5, Key.Digit6 };
+        static readonly Key[] SpotKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5, Key.Digit6, Key.Digit7 };
 
         [SerializeField, Tooltip("그립 정렬 도구 프로필(씬 빌더가 연결). 비어 있으면 런타임 기본값을 쓴다.")]
         GripOffsetProfile[] gripProfiles;
@@ -46,6 +48,7 @@ namespace Jongreul.XrInteraction.Demos
         public CartridgeStation Cartridge { get; private set; }
         public ZiplineStation Zipline { get; private set; }
         public GripAlignStation Grip { get; private set; }
+        public ThrowStation ThrowSubmit { get; private set; }
 
         void Awake()
         {
@@ -64,6 +67,8 @@ namespace Jongreul.XrInteraction.Demos
             Zipline.Configure(Rig);
             Grip = CreateStation<GripAlignStation>("GripAlignStation", new Vector3(GripSpotX, 0f, 0f));
             Grip.Configure(Rig, gripProfiles != null && gripProfiles.Length > 0 ? gripProfiles : null);
+            ThrowSubmit = CreateStation<ThrowStation>("ThrowStation", new Vector3(ThrowSpotX, 0f, 0f));
+            ThrowSubmit.Configure(Rig);
 
             BuildHelp();
         }
@@ -184,7 +189,7 @@ namespace Jongreul.XrInteraction.Demos
             text.color = StationKit.Muted;
             text.alignment = TextAnchor.LowerLeft;
             text.raycastTarget = false;
-            text.text = "1-6: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
+            text.text = "1-7: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
         }
     }
 
