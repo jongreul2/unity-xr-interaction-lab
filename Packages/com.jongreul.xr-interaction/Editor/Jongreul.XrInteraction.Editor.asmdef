@@ -1,0 +1,19 @@
+{
+    "name": "Jongreul.XrInteraction.Editor",
+    "rootNamespace": "Jongreul.XrInteraction.Editor",
+    "references": [
+        "Jongreul.XrInteraction.Core",
+        "Jongreul.XrInteraction"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
