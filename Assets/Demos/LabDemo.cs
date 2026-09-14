@@ -18,8 +18,19 @@ namespace Jongreul.XrInteraction.Demos
         public const float EquipSpotX = 3.0f;
         public const float ShieldSpotX = 6.0f;
         public const float CartridgeSpotX = 9.0f;
+        public const float ZiplineSpotX = 12.0f;
 
-        static readonly float[] Spots = { StrikeSpotX, EquipSpotX, ShieldSpotX, CartridgeSpotX };
+        /// <summary>순간이동 지점. 짚라인은 출발대 위에 선다.</summary>
+        static readonly Vector3[] Spots =
+        {
+            new Vector3(StrikeSpotX, 0f, 0f),
+            new Vector3(EquipSpotX, 0f, 0f),
+            new Vector3(ShieldSpotX, 0f, 0f),
+            new Vector3(CartridgeSpotX, 0f, 0f),
+            new Vector3(ZiplineSpotX, ZiplineStation.PlatformHeight, 0f),
+        };
+
+        static readonly Key[] SpotKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5 };
 
         public PlayerRig Rig { get; private set; }
         public DesktopHandSimulator Simulator { get; private set; }
@@ -28,6 +39,7 @@ namespace Jongreul.XrInteraction.Demos
         public EquipStation Equip { get; private set; }
         public ShieldStation Shield { get; private set; }
         public CartridgeStation Cartridge { get; private set; }
+        public ZiplineStation Zipline { get; private set; }
 
         void Awake()
         {
@@ -42,6 +54,8 @@ namespace Jongreul.XrInteraction.Demos
             Shield.Configure(Rig);
             Cartridge = CreateStation<CartridgeStation>("CartridgeStation", new Vector3(CartridgeSpotX, 0f, 0f));
             Cartridge.Configure(Rig);
+            Zipline = CreateStation<ZiplineStation>("ZiplineStation", new Vector3(ZiplineSpotX, 0f, 0f));
+            Zipline.Configure(Rig);
 
             BuildHelp();
         }
@@ -52,21 +66,23 @@ namespace Jongreul.XrInteraction.Demos
             if (keyboard == null || !Simulator.KeyboardAndMouse)
                 return;
 
-            if (keyboard.digit1Key.wasPressedThisFrame)
-                TeleportTo(0);
-            else if (keyboard.digit2Key.wasPressedThisFrame)
-                TeleportTo(1);
-            else if (keyboard.digit3Key.wasPressedThisFrame)
-                TeleportTo(2);
-            else if (keyboard.digit4Key.wasPressedThisFrame)
-                TeleportTo(3);
+            for (int i = 0; i < SpotKeys.Length; i++)
+            {
+                if (keyboard[SpotKeys[i]].wasPressedThisFrame)
+                {
+                    TeleportTo(i);
+                    break;
+                }
+            }
         }
 
-        /// <summary>스테이션 앞으로 리그를 옮긴다.</summary>
+        /// <summary>스테이션 앞으로 리그를 옮긴다. 짚라인을 타는 중이면 끊는다.</summary>
         public void TeleportTo(int station)
         {
             station = Mathf.Clamp(station, 0, Spots.Length - 1);
-            Rig.transform.position = new Vector3(Spots[station], 0f, 0f);
+            if (Zipline != null)
+                Zipline.ResetStation();
+            Rig.transform.position = Spots[station];
         }
 
         T CreateStation<T>(string stationName, Vector3 position) where T : Component
@@ -79,7 +95,7 @@ namespace Jongreul.XrInteraction.Demos
 
         void BuildEnvironment()
         {
-            StationKit.Primitive(PrimitiveType.Plane, transform, "Floor", new Vector3(4.5f, 0f, 0.8f), new Vector3(1.3f, 1f, 0.55f),
+            StationKit.Primitive(PrimitiveType.Plane, transform, "Floor", new Vector3(9f, 0f, 0.8f), new Vector3(2.2f, 1f, 0.55f),
                 new Color(0.15f, 0.16f, 0.19f), collider: true);
 
             var sun = new GameObject("Sun").AddComponent<Light>();
@@ -160,7 +176,7 @@ namespace Jongreul.XrInteraction.Demos
             text.color = StationKit.Muted;
             text.alignment = TextAnchor.LowerLeft;
             text.raycastTarget = false;
-            text.text = "1-4: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
+            text.text = "1-5: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
         }
     }
 

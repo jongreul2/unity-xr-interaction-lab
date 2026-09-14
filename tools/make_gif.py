@@ -8,6 +8,21 @@ import pathlib
 from PIL import Image
 
 
+def paste_inset(image: Image.Image, inset_path: pathlib.Path, scale: float, pos: str = "br") -> None:
+    """같은 번호의 다른 카메라 프레임을 아래쪽 모서리 작은 창(흰 테두리)으로 겹친다."""
+    if not inset_path.exists():
+        return
+    inset = Image.open(inset_path).convert("RGB")
+    width = round(image.width * scale)
+    height = round(inset.height * width / inset.width)
+    inset = inset.resize((width, height), Image.LANCZOS)
+    margin, border = 12, 3
+    x = image.width - width - margin if pos == "br" else margin
+    y = image.height - height - margin
+    image.paste((235, 238, 244), (x - border, y - border, x + width + border, y + height + border))
+    image.paste(inset, (x, y))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("frames", type=pathlib.Path)
@@ -16,6 +31,9 @@ def main() -> None:
     parser.add_argument("--width", type=int, default=960)
     parser.add_argument("--colors", type=int, default=128)
     parser.add_argument("--hold-last", type=float, default=1.5, help="마지막 프레임 정지 시간(초)")
+    parser.add_argument("--inset", type=pathlib.Path, help="오른쪽 아래 작은 창에 겹칠 프레임 폴더(같은 번호)")
+    parser.add_argument("--inset-scale", type=float, default=0.36, help="작은 창 너비 / 전체 너비")
+    parser.add_argument("--inset-pos", choices=["br", "bl"], default="br", help="작은 창 위치(오른쪽/왼쪽 아래)")
     args = parser.parse_args()
 
     paths = sorted(args.frames.glob("*.png"))
@@ -28,6 +46,8 @@ def main() -> None:
         if image.width != args.width:
             height = round(image.height * args.width / image.width)
             image = image.resize((args.width, height), Image.LANCZOS)
+        if args.inset:
+            paste_inset(image, args.inset / path.name, args.inset_scale, args.inset_pos)
         frames.append(image)
 
     # 첫 프레임 팔레트를 공유하면 프레임 간 색이 튀지 않는다.
