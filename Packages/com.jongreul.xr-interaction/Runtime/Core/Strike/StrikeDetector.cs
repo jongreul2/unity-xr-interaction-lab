@@ -23,6 +23,7 @@ namespace Jongreul.XrInteraction.Strike
     }
 
     /// <summary>판정 기준. 수치는 데모 씬의 튜닝 패널에서 실측해 정한다.</summary>
+    [Serializable]
     public sealed class StrikeSettings
     {
         /// <summary>맨손: 타격면 안쪽으로 들어가는 속도 하한(m/s).</summary>

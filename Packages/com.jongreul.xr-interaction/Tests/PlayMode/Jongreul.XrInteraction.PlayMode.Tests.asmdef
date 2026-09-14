@@ -4,6 +4,7 @@
     "references": [
         "Jongreul.XrInteraction.Core",
         "Jongreul.XrInteraction",
+        "Jongreul.XrInteraction.Stations",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
