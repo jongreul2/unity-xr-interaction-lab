@@ -43,7 +43,7 @@ namespace Jongreul.XrInteraction.Stations
         }
 
         [SerializeField] float fireInterval = 1.7f;
-        [SerializeField] float projectileSpeed = 2.6f;
+        [SerializeField] float projectileSpeed = 2.2f;
         [SerializeField] int damagePerBlock = 20;
 
         readonly List<Projectile> _projectiles = new List<Projectile>();
@@ -90,7 +90,8 @@ namespace Jongreul.XrInteraction.Stations
             if (_rig == null)
                 return;
 
-            if (AutoFire && Time.time >= _nextFire)
+            // 플레이어가 이 스테이션 앞에 있을 때만 쏜다(다른 스테이션에 있을 때 랩을 가로질러 날아오지 않게).
+            if (AutoFire && IsPlayerNear && Time.time >= _nextFire)
             {
                 (float angle, bool bypass) = Pattern[_patternIndex++ % Pattern.Length];
                 FireFrom(angle, bypass);
@@ -98,7 +99,8 @@ namespace Jongreul.XrInteraction.Stations
 
             MoveProjectiles();
 
-            _flash = Mathf.Max(0f, _flash - Time.deltaTime * 2f);
+            // 결과 색은 다음 판정 전까지 옅게라도 남긴다(무엇이 일어났는지 계속 읽히게).
+            _flash = Mathf.Max(0.45f, _flash - Time.deltaTime * 0.8f);
             _outcome.color = Color.Lerp(StationKit.Muted, _flashColor, _flash);
         }
 
@@ -114,7 +116,7 @@ namespace Jongreul.XrInteraction.Stations
             _turret.rotation = Quaternion.LookRotation(direction, Vector3.up);
 
             GameObject ball = StationKit.Primitive(PrimitiveType.Sphere, transform, "Projectile", Vector3.zero,
-                Vector3.one * 0.07f, bypass ? new Color(0.7f, 0.35f, 0.95f) : new Color(0.98f, 0.55f, 0.2f));
+                Vector3.one * 0.1f, bypass ? new Color(0.7f, 0.35f, 0.95f) : new Color(0.98f, 0.55f, 0.2f));
             ball.transform.position = origin;
             _projectiles.Add(new Projectile { Transform = ball.transform, Direction = direction, Bypass = bypass });
         }
@@ -122,6 +124,16 @@ namespace Jongreul.XrInteraction.Stations
         public void Repair() => _blocker.Durability.Repair();
 
         Vector3 Target => _rig.Head.position + Vector3.down * 0.35f;
+
+        bool IsPlayerNear
+        {
+            get
+            {
+                Vector3 offset = _rig.Head.position - transform.position;
+                offset.y = 0f;
+                return offset.magnitude < 1.5f;
+            }
+        }
 
         void MoveProjectiles()
         {

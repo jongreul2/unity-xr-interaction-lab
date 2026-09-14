@@ -15,15 +15,19 @@ namespace Jongreul.XrInteraction.Demos
         public static readonly Color Backdrop = new Color(0.07f, 0.08f, 0.1f);
 
         public const float StrikeSpotX = 0f;
-        public const float EquipSpotX = 2.4f;
+        public const float EquipSpotX = 3.0f;
+        public const float ShieldSpotX = 6.0f;
+        public const float CartridgeSpotX = 9.0f;
 
-        static readonly float[] Spots = { StrikeSpotX, EquipSpotX };
+        static readonly float[] Spots = { StrikeSpotX, EquipSpotX, ShieldSpotX, CartridgeSpotX };
 
         public PlayerRig Rig { get; private set; }
         public DesktopHandSimulator Simulator { get; private set; }
         public Camera HeadCamera { get; private set; }
         public StrikeStation Strike { get; private set; }
         public EquipStation Equip { get; private set; }
+        public ShieldStation Shield { get; private set; }
+        public CartridgeStation Cartridge { get; private set; }
 
         void Awake()
         {
@@ -34,6 +38,10 @@ namespace Jongreul.XrInteraction.Demos
             Strike.Configure(Rig);
             Equip = CreateStation<EquipStation>("EquipStation", new Vector3(EquipSpotX, 0f, 0f));
             Equip.Configure(Rig);
+            Shield = CreateStation<ShieldStation>("ShieldStation", new Vector3(ShieldSpotX, 0f, 0f));
+            Shield.Configure(Rig);
+            Cartridge = CreateStation<CartridgeStation>("CartridgeStation", new Vector3(CartridgeSpotX, 0f, 0f));
+            Cartridge.Configure(Rig);
 
             BuildHelp();
         }
@@ -48,6 +56,10 @@ namespace Jongreul.XrInteraction.Demos
                 TeleportTo(0);
             else if (keyboard.digit2Key.wasPressedThisFrame)
                 TeleportTo(1);
+            else if (keyboard.digit3Key.wasPressedThisFrame)
+                TeleportTo(2);
+            else if (keyboard.digit4Key.wasPressedThisFrame)
+                TeleportTo(3);
         }
 
         /// <summary>스테이션 앞으로 리그를 옮긴다.</summary>
@@ -67,7 +79,7 @@ namespace Jongreul.XrInteraction.Demos
 
         void BuildEnvironment()
         {
-            StationKit.Primitive(PrimitiveType.Plane, transform, "Floor", new Vector3(1.2f, 0f, 0.5f), new Vector3(0.8f, 1f, 0.5f),
+            StationKit.Primitive(PrimitiveType.Plane, transform, "Floor", new Vector3(4.5f, 0f, 0.8f), new Vector3(1.3f, 1f, 0.55f),
                 new Color(0.15f, 0.16f, 0.19f), collider: true);
 
             var sun = new GameObject("Sun").AddComponent<Light>();
@@ -148,7 +160,7 @@ namespace Jongreul.XrInteraction.Demos
             text.color = StationKit.Muted;
             text.alignment = TextAnchor.LowerLeft;
             text.raycastTarget = false;
-            text.text = "1-2: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
+            text.text = "1-4: station   Mouse: move hand   Q (hold): left hand   Wheel: depth   R+Mouse: rotate   LMB: grip   Arrows: look";
         }
     }
 
