@@ -2,7 +2,10 @@
     "name": "Jongreul.XrInteraction.Demos.Editor",
     "rootNamespace": "Jongreul.XrInteraction.Demos.Editor",
     "references": [
-        "Jongreul.XrInteraction.Demos"
+        "Jongreul.XrInteraction.Demos",
+        "Jongreul.XrInteraction.Core",
+        "Jongreul.XrInteraction",
+        "Jongreul.XrInteraction.Stations"
     ],
     "includePlatforms": [
         "Editor"
