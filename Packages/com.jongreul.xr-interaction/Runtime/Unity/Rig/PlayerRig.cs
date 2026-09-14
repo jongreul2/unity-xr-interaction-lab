@@ -23,6 +23,13 @@ namespace Jongreul.XrInteraction
         public DesktopHandSimulator Simulator => simulator;
         public IXRInputSource ActiveSource { get; private set; }
 
+        /// <summary>false면 헤드셋이 있어도 시뮬레이터만 쓴다(자동 테스트·촬영).</summary>
+        public bool PreferXRDevice
+        {
+            get => preferXRDevice;
+            set => preferXRDevice = value;
+        }
+
         public Hand GetHand(HandSide side) => side == HandSide.Left ? leftHand : rightHand;
 
         /// <summary>코드로 조립하는 씬·테스트용.</summary>

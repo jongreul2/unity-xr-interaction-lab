@@ -36,9 +36,12 @@ namespace Jongreul.XrInteraction
     /// </summary>
     public sealed class XRDeviceInputSource : IXRInputSource
     {
+        /// <summary>
+        /// 헤드셋 세션이 실제로 돌고 있을 때만 true. 장치 목록만 보면 헤드셋 없이도 XR 로더가 한동안
+        /// 추적되지 않는 머리 장치를 내놓아 리그가 원점에 박힌다.
+        /// </summary>
         public bool IsAvailable =>
-            InputDevices.GetDeviceAtXRNode(XRNode.Head).isValid ||
-            InputDevices.GetDeviceAtXRNode(XRNode.RightHand).isValid;
+            XRSettings.isDeviceActive && InputDevices.GetDeviceAtXRNode(XRNode.Head).isValid;
 
         public bool TryGetHead(out Vector3 position, out Quaternion rotation)
         {
