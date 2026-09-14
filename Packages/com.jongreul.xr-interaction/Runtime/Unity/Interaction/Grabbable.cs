@@ -46,7 +46,13 @@ namespace Jongreul.XrInteraction
                 _offset = offset;
         }
 
-        public void ClearOffsetOverride() => _hasOverride = false;
+        /// <summary>오버라이드를 지운다. 쥐고 있으면 프로필 값으로 바로 돌아간다.</summary>
+        public void ClearOffsetOverride()
+        {
+            _hasOverride = false;
+            if (IsHeld && gripProfile != null)
+                _offset = gripProfile.Get(Holder.Side);
+        }
 
         internal void BeginHold(Hand hand)
         {
