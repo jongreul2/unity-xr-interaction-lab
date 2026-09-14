@@ -40,7 +40,8 @@ namespace Jongreul.XrInteraction.Stations
         /// <summary>내 착용물 레이어. 머리 카메라의 컬링 마스크에서 뺀다.</summary>
         public const int SelfWearableLayer = 30;
 
-        const float ReplaceConfirmSeconds = 3f;
+        // 실제 VR에서 잡기 → 옮기기 → 놓기 한 번에 2~3초가 걸린다. 확인 창은 그보다 넉넉해야 한다.
+        const float ReplaceConfirmSeconds = 6f;
         const int Columns = 3;
         const int Rows = 2;
 
@@ -329,15 +330,18 @@ namespace Jongreul.XrInteraction.Stations
         {
             var mannequin = new GameObject("Mannequin").transform;
             mannequin.SetParent(transform, false);
-            mannequin.localPosition = new Vector3(0.85f, 0, 0.95f);
+            mannequin.localPosition = new Vector3(1.05f, 0, 0.9f);
             mannequin.localRotation = Quaternion.Euler(0, 200, 0);
 
             var skin = new Color(0.78f, 0.78f, 0.82f);
             StationKit.Primitive(PrimitiveType.Capsule, mannequin, "Body", new Vector3(0, 1.0f, 0), new Vector3(0.36f, 0.5f, 0.24f), skin);
             Transform head = StationKit.Primitive(PrimitiveType.Sphere, mannequin, "Head", new Vector3(0, 1.62f, 0), Vector3.one * 0.22f, skin).transform;
             StationKit.Primitive(PrimitiveType.Cylinder, mannequin, "Stand", new Vector3(0, 0.25f, 0), new Vector3(0.08f, 0.25f, 0.08f), StationKit.Surface);
-            StationKit.Label(mannequin, "Title", new Vector3(0, 2.0f, 0), new Vector2(0.6f, 0.06f), 40, TextAnchor.MiddleCenter, StationKit.Muted)
-                .text = "MIRROR";
+            Text mirrorLabel = StationKit.Label(mannequin, "Title", new Vector3(0, 2.0f, 0), new Vector2(0.6f, 0.06f), 40,
+                TextAnchor.MiddleCenter, StationKit.Muted);
+            mirrorLabel.text = "MIRROR";
+            // 마네킹은 플레이어를 바라본다. 라벨 캔버스 앞면도 플레이어 쪽으로 돌려 글자가 뒤집히지 않게 한다.
+            mirrorLabel.canvas.transform.localRotation = Quaternion.Euler(0, 180, 0);
             head.name = "Head";
 
             _mannequinSockets[Wearables.Head] = Socket(mannequin, "Head", new Vector3(0, 1.74f, 0), Quaternion.Euler(-90, 0, 0));
