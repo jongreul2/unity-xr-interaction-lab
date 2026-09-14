@@ -1,0 +1,23 @@
+{
+    "name": "Jongreul.XrInteraction.PlayMode.Tests",
+    "rootNamespace": "Jongreul.XrInteraction.Tests",
+    "references": [
+        "Jongreul.XrInteraction.Core",
+        "Jongreul.XrInteraction",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
