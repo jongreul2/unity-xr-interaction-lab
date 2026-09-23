@@ -9,17 +9,21 @@
 
 라이브 VR 멀티플레이 게임 개발 중 해결한 문제를 회사 코드 없이 범용으로 다시 구현했습니다.
 
-| 타격 패드(1인칭) | 장착 옷장 + 마네킹(관찰자 시점) |
-|---|---|
-| ![타격 패드: 내리치면 게이지가 차고, 옆으로 스치거나 느리게 누르면 거부](docs/images/strike-pad.gif) | ![옷장: 모자를 머리에 대면 장착, 다른 모자는 교체 확인, 마네킹이 따라 입음](docs/images/wardrobe.gif) |
-| **방패 막기** | **카트리지 슬롯독** |
-| ![방패: 정면은 막고 옆에서 오는 것은 통과, 막을수록 초록에서 빨강으로](docs/images/shield.gif) | ![슬롯독: 등 뒤에 꽂고 사용하면 쿨타임 고리가 다시 차고, 다른 칸으로 옮겨도 쿨타임 유지](docs/images/cartridge.gif) |
-| **짚라인(1인칭 + 옆 추적 카메라)** | **그립 정렬(VR 안 튜닝 패널)** |
-| ![짚라인: 머리 위 손잡이를 잡으면 출발, 가는 도중 다른 손으로 바꿔 잡고, 종점에서 자동으로 놓아 착지](docs/images/zipline.gif) | ![그립 정렬: 옆으로 누운 채 쥐어지는 새 도구를 슬라이더로 맞춰 저장하면, 왼손으로 쥘 때 거울상으로 쥐어짐](docs/images/grip-align.gif) |
-| **던지기 + 제출 슬롯** | |
-| ![던지기: 공을 던져 상자에 넣고, 잡동사니는 튕겨 나오고, 벨을 쳐서 세 개가 모이면 제출](docs/images/throw-submit.gif) | |
+**이 저장소는 기능 데모가 아니라 코드 샘플입니다.** 판정 규칙은 전부 UnityEngine 참조가 없는 C# 어셈블리에 있고, 101개 EditMode 테스트가 동작을 고정합니다. 데모 씬은 확인용으로만 두었습니다.
 
-<sub>헤드셋 없이 데스크톱 손 시뮬레이터로 헤드리스 촬영. 짚라인·그립 정렬·던지기는 게임 시간을 촬영 프레임에 고정해 실제 속도로 재생된다. 헤드셋 촬영본은 추가 예정.</sub>
+## 읽는 순서
+
+코드를 보러 오셨다면 이 순서를 권합니다. 전부 `Packages/com.jongreul.xr-interaction/` 아래에 있습니다.
+
+| # | 파일 | 무엇을 보면 되는지 |
+|---|---|---|
+| 1 | `Runtime/Core/Strike/StrikeDetector.cs` | 손 속도를 리그 로컬로 재서 "쳤는가"를 판정. 탈것 이동·재시뮬레이션 틱이 끼어도 오탐이 없는 이유 |
+| 2 | `Tests/EditMode/Strike/StrikeDetectorTests.cs` | 같은 궤적을 월드 좌표로 판정하면 오탐이 난다는 것까지 단언한 테스트 |
+| 3 | `Runtime/Core/Zipline/ZiplineRide.cs` · `ZiplinePath.cs` | 호 길이 경로, 종점 감속 곡선, 손 바꿔 잡기 여유 시간 |
+| 4 | `Runtime/Core/Throw/ThrowVelocityEstimator.cs` · `SettleDetector.cs` · `SubmissionBox.cs` | 최소제곱 던지기 속도, "언제 멈췄는가" 판정, 제출 슬롯 규칙 |
+| 5 | `Runtime/Core/Equip/SocketSensor.cs` · `EquipState.cs` | 거리 + 소켓 법선 각도로 장착 판정, 슬롯당 1개·교체 확인 상태 |
+| 6 | `Runtime/Core/Grip/GripOffset.cs` · `TrackSlider.cs` | 오른손 오프셋 → 왼손 거울상, VR 안 슬라이더 수학 |
+| 7 | `Runtime/Core/Shield/ShieldBlock.cs` · `Runtime/Core/Cartridge/CartridgeSlots.cs` | 각도 막기·내구도, 카트리지에 붙어 다니는 쿨타임 |
 
 ---
 
@@ -126,7 +130,7 @@ Jongreul.XrInteraction.Editor    그립 튜닝 창
 
 ## 관련 포트폴리오
 
-- 포트폴리오(Notion): _링크 추가 예정_
+- 포트폴리오(Notion): [강종렬 포트폴리오 2026](https://app.notion.com/p/jongreulk/2026-3d849fd9829281cba738df3134fa9b8a)
 
 ---
 
